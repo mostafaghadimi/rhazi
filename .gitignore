@@ -1,2 +1,4 @@
 files
 .idea
+wordcloud/input.txt
+/wordcloud/output.txt
