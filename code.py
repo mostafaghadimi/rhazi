@@ -3,7 +3,7 @@ import pandas as pd
 
 pd.set_option('display.expand_frame_repr', False)
 
-dataframe = pd.read_excel(r'./files/consultationQuestionsـv2.xlsx', usecols='G:G')
+dataframe = pd.read_excel(r'./files/consultationQuestionsـv2.xlsx')
 
 df = pd.DataFrame(dataframe)
 
@@ -13,7 +13,8 @@ count_sections = [0 for _ in range(51)]
 
 
 for id in medical_section:
-    count_sections[id] += 1
+    if id:
+        count_sections[id] += 1
 
 print(count_sections)
 
