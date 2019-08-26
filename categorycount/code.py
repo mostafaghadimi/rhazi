@@ -13,10 +13,10 @@ def question_category_count(categories, counts):
 pd.set_option('display.expand_frame_repr', False)
 
 
-questions_file = pd.read_excel(r'./files/consultationQuestionsـv2.xlsx')
+questions_file = pd.read_excel(r'../files/consultationQuestionsـv2.xlsx')
 questions_data_frame = pd.DataFrame(questions_file)
 
-categories_file = pd.read_excel(r'./files/medicalSections.xlsx')
+categories_file = pd.read_excel(r'../files/medicalSections.xlsx')
 categories_data_frame = pd.DataFrame(categories_file)["medicalSections"]
 
 category_list = []
@@ -32,4 +32,5 @@ for id in medical_section:
 count_sections = count_sections[1:] + [0]
 
 question_info = question_category_count(category_list, count_sections)
-print(question_info)
+with open('categories.txt', 'w', encoding='utf-8') as categories_output:
+    categories_output.write(str(question_info))
