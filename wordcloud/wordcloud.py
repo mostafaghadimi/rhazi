@@ -3,7 +3,7 @@ from hazm import Normalizer, word_tokenize
 with open('persian-stops.txt', encoding='utf-8') as stop_file:
     stop_words = stop_file.read().splitlines()
 
-with open('input.txt', encoding='utf-8') as input_file:
+with open(r'./input/input.txt', encoding='utf-8') as input_file:
     input_text = []
     normalizer = Normalizer()
     for line in input_file:
