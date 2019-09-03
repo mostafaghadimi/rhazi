@@ -1255,3 +1255,13 @@
 ۹
 …
 ﻿و
+سوال
+جواب
+سلام
+
+question
+dtype
+Name
+object
+?
+!
