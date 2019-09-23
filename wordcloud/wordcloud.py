@@ -1,32 +1,46 @@
 from hazm import Normalizer, word_tokenize
+import pandas as pd
+import numpy as np
 
-with open('persian-stops.txt', encoding='utf-8') as stop_file:
+pd.options.display.max_rows
+pd.set_option('display.max_colwidth', -1)
+
+# Persian Stops Word List
+with open('./persian-stops.txt', encoding='utf-8') as stop_file:
     stop_words = stop_file.read().splitlines()
 
-with open(r'./input/input.txt', encoding='utf-8') as input_file:
-    input_text = []
+# Reading input
+excel_file = pd.read_excel(r'../files/consultationQuestionsـv2.xlsx')
+
+question_data_frame = pd.DataFrame(excel_file)
+question_data_frame = question_data_frame.applymap(str)
+
+question_group = question_data_frame.astype({'expertise_id': float}).groupby('expertise_id')
+
+question_join = question_group['question'].apply(' '.join)[1:]
+
+question_sets = pd.DataFrame(question_join)
+
+for index, question in question_sets.iterrows():
     normalizer = Normalizer()
-    for line in input_file:
-        normal_line = normalizer.normalize(line)
-        word_list = word_tokenize(normal_line)
-        input_text.extend(word_list)
+    stemmer = Stemmer()
+    normal_text = normalizer.normalize(str(question))
+    word_list = word_tokenize(normal_text)
+    stemmed_word_list = []
+    for i in range(len(word_list)):
+        stemmed_word_list[i] = stemmer.stem(word_list[i])
+    new_word_list = []
+    for i in range(len(stemmed_word_list)):
+        # print(word_list[i])
+        inserted = stemmed_word_list[i]
+        for stop in stop_words:
+            if stemmed_word_list[i] == stop:
+                inserted = ""
+        # print(inserted)
+        new_word_list.append(inserted)
 
-with open('output.txt', 'w', encoding='utf-8') as output_file:
-    number_of_words = len(input_text)
-    for i in range(number_of_words):
-        for stop_word in stop_words:
-            if input_text[i] == stop_word:
-                input_text[i] = ""
-
-# remove empty strings
-input_text = list(filter(None, input_text))
-
-print(input_text)
-
-
-
-#test = "چت سیاسی"
-# for stops in stop_words:
-#     if (re.compile(r"\b" + stops + r"\b").findall(test)):
-#         test = test.replace(stops, "")
-# print(test)
+    text = " ".join(map(str, new_word_list))
+    # print(text)
+    with open(r'./output/{}.txt'.format(int(index)), 'w', encoding='utf-8') as file:
+        # np.savetxt(file, text)
+        file.write(text)
