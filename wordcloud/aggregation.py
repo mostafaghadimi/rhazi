@@ -1,4 +1,4 @@
-from hazm import Normalizer, word_tokenize
+from hazm import Normalizer, word_tokenize, Stemmer
 import pandas as pd
 import numpy as np
 
@@ -23,14 +23,19 @@ question_sets = pd.DataFrame(question_join)
 
 for index, question in question_sets.iterrows():
     normalizer = Normalizer()
+    stemmer = Stemmer()
     normal_text = normalizer.normalize(str(question))
     word_list = word_tokenize(normal_text)
-    new_word_list = []
+    stemmed_word_list = []
     for i in range(len(word_list)):
+        stemmed_word_list.append(stemmer.stem(word_list[i]))
+        print(stemmed_word_list[i], word_list[i])
+    new_word_list = []
+    for i in range(len(stemmed_word_list)):
         # print(word_list[i])
-        inserted = word_list[i]
+        inserted = stemmed_word_list[i]
         for stop in stop_words:
-            if word_list[i] == stop:
+            if stemmed_word_list[i] == stop:
                 inserted = ""
         # print(inserted)
         new_word_list.append(inserted)
